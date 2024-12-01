@@ -1,0 +1,86 @@
+# Built application files
+*.apk
+*.aar
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+release/
+
+# Gradle files
+.gradle/
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# Local configuration files
+local.properties
+*.properties
+!gradle.properties
+
+# Android Studio files
+.idea/
+.navigation/
+captures/
+*.iml
+*.ipr
+*.iws
+.externalNativeBuild/
+.cxx/
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Keystore files & sensitive information
+*.jks
+*.keystore
+*.p12
+google-services.json
+firebase_credentials.json
+keystore.properties
+
+# NDK
+obj/
+.externalNativeBuild
+.cxx/
+
+# Thumbnails
+._*
+
+# Log Files
+*.log
+
+# Android Studio Patch
+!/gradle/wrapper/gradle-wrapper.jar
+!/gradle/wrapper/gradle-wrapper.properties
+
+# Version control
+vcs.xml
+
+# fastlane specific
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+fastlane/readme.md
+
+# Crashlytics configuations
+com_crashlytics_export_strings.xml
+
+# Android Profiling
+*.hprof
+
+#configuration file
+.env

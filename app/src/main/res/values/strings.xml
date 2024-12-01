@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">skate.crete.or.die</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="center">Center</string>
+    <string name="reset">Reset</string>
+    <string name="track">Track</string>
+    <string name="website">Website</string>
+    <string name="map">Map</string>
+    <string name="directions">Directions</string>
+    <string name="close">Close</string>
+    <string name="size_with_placeholder">Size: %1$s</string>
+    <string name="builder_with_placeholder">Builder: %1$s</string>
+    <string name="lights_with_placeholder">Lights: %1$s</string>
+    <string name="covered_with_placeholder">Covered: %1$s</string>
+    <string name="skateparkimage">Skatepark Image</string>
+    <string name="truck_logo_description">Truck Logo</string>
+</resources>

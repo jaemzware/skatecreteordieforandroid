@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>westseattle</name>
+	<gx:CascadingStyle kml:id="__managed_style_291D010FE92DF6C4457A">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff6abb66</color>
+				<width>1.5</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_1E251302692DF6C4457A">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff6abb66</color>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_02B85F10102DF6C4457A">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_1E251302692DF6C4457A</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_291D010FE92DF6C4457A</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark id="0BE102ECC82DF6C3F7F5">
+		<name>roxhillhome</name>
+		<LookAt>
+			<longitude>-122.3566672103134</longitude>
+			<latitude>47.52185281880365</latitude>
+			<altitude>119.8800667963198</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>1914.91100860876</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_02B85F10102DF6C4457A</styleUrl>
+		<LineString>
+			<coordinates>
+				-122.369924430547,47.52055878031931,0 -122.3698817368711,47.52108902383443,0 -122.363866000355,47.52104990996225,0 -122.3610141895988,47.52282738644045,0 -122.3565922979364,47.52286660874914,0 -122.3539186485627,47.52286065328521,0 -122.3527686580419,47.52282608203415,0 -122.3516232725465,47.52280073538967,0 -122.3517003961763,47.52183661632413,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+</Document>
+</kml>

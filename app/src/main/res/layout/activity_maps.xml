@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/relativeLayout">
+    <include layout="@layout/loading_screen" />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.jaemzware.skate.crete.or.die.MapsActivity" />
+
+    <FrameLayout
+        android:id="@+id/locationDetailsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="80dp"
+        android:layout_marginEnd="16dp">
+
+        <TextView
+            android:id="@+id/tvMileage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#32CD32"
+            android:textSize="16sp"
+            android:background="#80000000"
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/tvElapsedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="#32CD32"
+            android:textSize="16sp"
+            android:background="#80000000"
+            android:padding="8dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:background="#000"
+        android:padding="8dp"
+        android:id="@+id/mapcontrols">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchLocationUpdates"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="@string/track"
+            android:padding="8dp"
+            android:textAppearance="?attr/textAppearanceButton"
+            android:background="?attr/selectableItemBackground"
+            android:theme="@style/ThemeOverlay.MaterialComponents.Light"
+            android:textColor="#FFF"
+            android:thumbTint="#FFF"
+            android:trackTint="#777"
+            style="@style/AppSwitchStyle"/>
+
+        <Button
+            android:id="@+id/btnCenterOnLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="#FFF"
+            android:text="@string/center"
+            android:backgroundTint="#000"/>
+
+        <Button
+            android:id="@+id/btnResetPolyline"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="#FFF"
+            android:text="@string/reset"
+            android:backgroundTint="#000"/>
+
+    </LinearLayout>
+</RelativeLayout>
+
+
