@@ -275,36 +275,42 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             // Clear existing markers
             mMap.clear()
 
+            // Create a batch of MarkerOptions
+            val markerOptionsBatch = mutableListOf<Pair<MarkerOptions, Skatepark>>()
+
+            // Process all skateparks and create MarkerOptions
             for (i in 0 until jsonArray.length()) {
                 val skateparkJson = jsonArray.getJSONObject(i)
                 val skatepark = Gson().fromJson(skateparkJson.toString(), Skatepark::class.java)
 
-                val latitude = skatepark.latitude
-                val longitude = skatepark.longitude
-                val name = skatepark.name
-                val pinimage = skatepark.pinimage
-                val pinImageResId = pinImageMap[pinimage]
+                val pinImageResId = pinImageMap[skatepark.pinimage]
 
                 if (pinImageResId != null) {
-                    val skateparkLocation = LatLng(latitude, longitude)
-                    runOnUiThread {
-                        // Create an icon from the resource ID
-                        val icon = BitmapDescriptorFactory.fromResource(pinImageResId)
-                        // Add a marker with the custom icon
-                        val marker = mMap.addMarker(
-                            MarkerOptions()
-                                .position(skateparkLocation)
-                                .title(name)
-                                .icon(icon)
-                        )
-                        marker?.tag = skatepark
-                    }
+                    val skateparkLocation = LatLng(skatepark.latitude, skatepark.longitude)
+                    val icon = BitmapDescriptorFactory.fromResource(pinImageResId)
+
+                    val markerOptions = MarkerOptions()
+                        .position(skateparkLocation)
+                        .title(skatepark.name)
+                        .icon(icon)
+
+                    markerOptionsBatch.add(Pair(markerOptions, skatepark))
                 }
             }
 
-            // Show toast message if data is from network
-            if (isFromNetwork) {
-                runOnUiThread {
+            // Add markers in batches
+            runOnUiThread {
+                val BATCH_SIZE = 50 // Adjust this value based on testing
+                markerOptionsBatch.chunked(BATCH_SIZE).forEach { batch ->
+                    // Process each batch
+                    batch.forEach { (markerOptions, skatepark) ->
+                        val marker = mMap.addMarker(markerOptions)
+                        marker?.tag = skatepark
+                    }
+                }
+
+                // Show toast message if data is from network
+                if (isFromNetwork) {
                     showSnackbar("Latest skatepark data loaded")
                 }
             }
@@ -312,6 +318,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         } catch (e: JSONException) {
             e.printStackTrace()
             // Handle JSON parsing error
+            runOnUiThread {
+                showSnackbar("Error loading skatepark data", Snackbar.LENGTH_LONG)
+            }
         }
     }
 
