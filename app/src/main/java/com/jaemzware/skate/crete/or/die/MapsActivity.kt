@@ -44,6 +44,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.jaemzware.skatecreteordie.BuildConfig
 import com.jaemzware.skatecreteordie.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -230,96 +235,109 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun fetchSkateparkData(retryCount: Int = 15, currentAttempt: Int = 1) {
         Log.d("SKATE.CRETE.OR.DIE", "FETCHBEGIN")
-        Thread {
+
+        // Use Kotlin Coroutines for better thread management
+        CoroutineScope(Dispatchers.IO).launch {
             Log.d("SKATE.CRETE.OR.DIE", "FETCHTHREADBEGIN")
-            var urlConnection: HttpURLConnection? = null
+
             try {
                 val url = URL(BuildConfig.PARK_DATABASE_URL)
-                urlConnection = url.openConnection() as HttpURLConnection
-                urlConnection.requestMethod = "GET"
-                urlConnection.connect()
+                val connection = withContext(Dispatchers.IO) {
+                    (url.openConnection() as HttpURLConnection).apply {
+                        // Set timeouts to prevent hanging
+                        connectTimeout = 10000
+                        readTimeout = 10000
+                        requestMethod = "GET"
 
-                val inputStream = urlConnection.inputStream
-                val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-                val skateparkData = bufferedReader.use { it.readText() }
+                        // Add caching support
+                        useCaches = true
+                        setRequestProperty("Cache-Control", "max-age=3600")
+                    }
+                }
 
-                // Parse and map data on the UI thread
-                runOnUiThread {
+                val skateparkData = withContext(Dispatchers.IO) {
+                    connection.inputStream.bufferedReader().use { it.readText() }
+                }
+
+                // Switch to Main thread for UI updates
+                withContext(Dispatchers.Main) {
                     parseAndMapData(skateparkData, true)
                 }
+
             } catch (e: Exception) {
-                e.printStackTrace()
-                Log.d("SKATE.CRETE.OR.DIE", "FETCHTHREADEXCEPTION ${e.message}")
-                // Attempt to retry
+                Log.e("SKATE.CRETE.OR.DIE", "FETCHTHREADEXCEPTION", e)
+
                 if (currentAttempt < retryCount) {
-                    Thread.sleep(2000) // Wait for 2 seconds before retrying
+                    delay(2000) // Coroutine-friendly delay
                     fetchSkateparkData(retryCount, currentAttempt + 1)
                 } else {
-                    runOnUiThread {
+                    withContext(Dispatchers.Main) {
                         showSnackbar("Failed to fetch skatepark data after $currentAttempt attempts. Check connection and try restarting.", Toast.LENGTH_LONG)
                     }
                 }
-            } finally {
-                urlConnection?.disconnect()
             }
+
             Log.d("SKATE.CRETE.OR.DIE", "FETCHTHREADEND")
-        }.start()
+        }
+
         Log.d("SKATE.CRETE.OR.DIE", "FETCHEND")
     }
 
     private fun parseAndMapData(data: String, isFromNetwork: Boolean = false) {
-        try {
-            val jsonObject = JSONObject(data)
-            val jsonArray = jsonObject.getJSONArray("skateparks")
+        // Move to a background thread for parsing
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                // Create Gson instance once
+                val gson = Gson()
 
-            // Clear existing markers
-            mMap.clear()
-
-            // Create a batch of MarkerOptions
-            val markerOptionsBatch = mutableListOf<Pair<MarkerOptions, Skatepark>>()
-
-            // Process all skateparks and create MarkerOptions
-            for (i in 0 until jsonArray.length()) {
-                val skateparkJson = jsonArray.getJSONObject(i)
-                val skatepark = Gson().fromJson(skateparkJson.toString(), Skatepark::class.java)
-
-                val pinImageResId = pinImageMap[skatepark.pinimage]
-
-                if (pinImageResId != null) {
-                    val skateparkLocation = LatLng(skatepark.latitude, skatepark.longitude)
-                    val icon = BitmapDescriptorFactory.fromResource(pinImageResId)
-
-                    val markerOptions = MarkerOptions()
-                        .position(skateparkLocation)
-                        .title(skatepark.name)
-                        .icon(icon)
-
-                    markerOptionsBatch.add(Pair(markerOptions, skatepark))
-                }
-            }
-
-            // Add markers in batches
-            runOnUiThread {
-                val BATCH_SIZE = 50 // Adjust this value based on testing
-                markerOptionsBatch.chunked(BATCH_SIZE).forEach { batch ->
-                    // Process each batch
-                    batch.forEach { (markerOptions, skatepark) ->
-                        val marker = mMap.addMarker(markerOptions)
-                        marker?.tag = skatepark
+                // Parse JSON more efficiently
+                val skateparks = withContext(Dispatchers.Default) {
+                    val jsonArray = JSONObject(data).getJSONArray("skateparks")
+                    List(jsonArray.length()) { i ->
+                        gson.fromJson(jsonArray.getJSONObject(i).toString(), Skatepark::class.java)
                     }
                 }
 
-                // Show toast message if data is from network
-                if (isFromNetwork) {
-                    showSnackbar("Latest skatepark data loaded")
-                }
-            }
+                // Pre-process markers in background
+                val markers = skateparks.mapNotNull { skatepark ->
+                    pinImageMap[skatepark.pinimage]?.let { pinImageResId ->
+                        val skateparkLocation = LatLng(skatepark.latitude, skatepark.longitude)
+                        val icon = BitmapDescriptorFactory.fromResource(pinImageResId)
 
-        } catch (e: JSONException) {
-            e.printStackTrace()
-            // Handle JSON parsing error
-            runOnUiThread {
-                showSnackbar("Error loading skatepark data", Snackbar.LENGTH_LONG)
+                        MarkerOptions()
+                            .position(skateparkLocation)
+                            .title(skatepark.name)
+                            .icon(icon) to skatepark
+                    }
+                }
+
+                // Switch to main thread for map operations
+                withContext(Dispatchers.Main) {
+                    // Clear map once
+                    mMap.clear()
+
+                    // Process in larger batches for better performance
+                    val BATCH_SIZE = 100
+                    markers.chunked(BATCH_SIZE).forEach { batch ->
+                        batch.forEach { (markerOptions, skatepark) ->
+                            mMap.addMarker(markerOptions)?.apply {
+                                tag = skatepark
+                            }
+                        }
+                        // Small delay between batches to prevent UI freezing
+                        delay(10)
+                    }
+
+                    if (isFromNetwork) {
+                        showSnackbar("Latest skatepark data loaded")
+                    }
+                }
+
+            } catch (e: JSONException) {
+                Log.e("SKATE.CRETE.OR.DIE", "JSON parsing error", e)
+                withContext(Dispatchers.Main) {
+                    showSnackbar("Error loading skatepark data", Snackbar.LENGTH_LONG)
+                }
             }
         }
     }
