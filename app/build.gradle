@@ -4,6 +4,14 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
+def envFile = rootProject.file(".env")
+def properties = new Properties()
+if (envFile.exists()) {
+    envFile.withReader('UTF-8') { reader ->
+        properties.load(reader)
+    }
+}
+
 android {
     namespace 'com.jaemzware.skatecreteordie'
     compileSdk 35
@@ -20,11 +28,11 @@ android {
 
         //environment variables
         manifestPlaceholders = [
-                GOOGLE_API_KEY: System.getenv('GOOGLE_API_KEY') ?: ""
+                GOOGLE_API_KEY: "${properties.getProperty('GOOGLE_API_KEY') ?: ''}"
         ]
-        buildConfigField "String", "IMAGES_BASE_URL", "\"${System.getenv('IMAGES_BASE_URL') ?: ''}\""
-        buildConfigField "String", "PARK_DATABASE_URL", "\"${System.getenv('PARK_DATABASE_URL') ?: ''}\""
-    }
+        buildConfigField "String", "IMAGES_BASE_URL", "\"${properties.getProperty('IMAGES_BASE_URL') ?: ''}\""
+        buildConfigField "String", "PARK_DATABASE_URL", "\"${properties.getProperty('PARK_DATABASE_URL') ?: ''}\""
+    }   // <-- This closing brace was missing
 
     buildTypes {
         release {
