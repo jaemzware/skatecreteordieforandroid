@@ -299,16 +299,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
                 // Pre-process markers in background
-                val markers = skateparks.mapNotNull { skatepark ->
-                    pinImageMap[skatepark.pinimage]?.let { pinImageResId ->
-                        val skateparkLocation = LatLng(skatepark.latitude, skatepark.longitude)
-                        val icon = BitmapDescriptorFactory.fromResource(pinImageResId)
+                val markers = skateparks.map { skatepark ->
+                    val pinImageResId = pinImageMap[skatepark.pinimage] ?: R.drawable.othergoodparkpin
+                    val skateparkLocation = LatLng(skatepark.latitude, skatepark.longitude)
+                    val icon = BitmapDescriptorFactory.fromResource(pinImageResId)
 
-                        MarkerOptions()
-                            .position(skateparkLocation)
-                            .title(skatepark.name)
-                            .icon(icon) to skatepark
-                    }
+                    MarkerOptions()
+                        .position(skateparkLocation)
+                        .title(skatepark.name)
+                        .icon(icon) to skatepark
                 }
 
                 // Switch to main thread for map operations
