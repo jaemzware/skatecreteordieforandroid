@@ -25,7 +25,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -35,8 +34,6 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.jaemzware.skatecreteordie.databinding.ActivityMapsBinding
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import androidx.appcompat.widget.SwitchCompat
@@ -76,6 +73,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     val pinImageMap = mapOf(
         "artisanpin" to R.drawable.artisanpin,
         "artisanlightspin" to R.drawable.artisanlightspin,
+        "dansparkpin" to R.drawable.dansparkpin,
+        "dansparklightspin" to R.drawable.dansparklightspin,
         "diyparkpin" to R.drawable.diyparkpin,
         "diyparklightspin" to R.drawable.diyparklightspin,
         "dreamlandpin" to R.drawable.dreamlandpin,
