@@ -220,7 +220,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun loadLocalSkateparkData() {
         try {
-            val inputStream = assets.open("skateparkdata20240303.js")
+            val inputStream = assets.open("skateparkdata20241209.js")
             val size = inputStream.available()
             val buffer = ByteArray(size)
             inputStream.read(buffer)
