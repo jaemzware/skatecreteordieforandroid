@@ -169,7 +169,7 @@ The following sections are for developers who want to build, modify, and contrib
 3. Configure server endpoints in `.env`:
    - `PARK_DATABASE_URL`: Your park data endpoint
      - Points to latest `skateparkdata.js`
-     - Example: `https://myserver.com/skateparkdata20240303.js`
+     - Example: `https://myserver.com/skateparkdata20241209.js`
    
    - `IMAGES_BASE_URL`: Your image server root
      - Base URL for all skatepark photos
@@ -206,9 +206,9 @@ The following sections are for developers who want to build, modify, and contrib
 ### Data Contribution
 
 - 📊 **Source Files**
-  * Main spreadsheet: `skateparkdata20240303.numbers`
-  * Generated file: `skateparkdata20240303.js`
-  * Submit park data PRs to `skateparkdata20240303.js`
+  * Main spreadsheet: `skateparkdata.csv`
+  * Generated file: `skateparkdata20241209.js`
+  * Submit park data PRs to `skateparkdata20241209.js`
 
 ### Park Data Schema
 
@@ -254,7 +254,7 @@ The following sections are for developers who want to build, modify, and contrib
 Instructions for potential contributors:
 1. Fork the repository
 2. Create a feature branch
-3. Submit a Pull Request (Submit park data PRs to `skateparkdata20240303.js`)
+3. Submit a Pull Request (Submit park data PRs to `skateparkdata20241209.js`)
 
 
 ## License
