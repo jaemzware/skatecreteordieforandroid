@@ -22,9 +22,12 @@ import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -69,6 +72,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var accumulatedElapsedTime: Long = 0
     private var timerHandler = Handler(Looper.getMainLooper())
     private var timerRunnable: Runnable? = null
+    private var currentFilter: String? = null
+    private var allMarkers = mutableListOf<Marker>()
 
     val pinImageMap = mapOf(
         "artisanpin" to R.drawable.artisanpin,
@@ -104,6 +109,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Setup spinner
+        val spinner = findViewById<Spinner>(R.id.pinTypeSpinner)
+        setupSpinner(spinner)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -313,6 +322,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 withContext(Dispatchers.Main) {
                     // Clear map once
                     mMap.clear()
+                    // Clear existing markers
+                    allMarkers.clear()
 
                     // Process in larger batches for better performance
                     val BATCH_SIZE = 100
@@ -320,6 +331,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         batch.forEach { (markerOptions, skatepark) ->
                             mMap.addMarker(markerOptions)?.apply {
                                 tag = skatepark
+                                // Add marker to our list of all markers
+                                allMarkers.add(this)
                             }
                         }
                         // Small delay between batches to prevent UI freezing
@@ -632,5 +645,67 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         snackbar.view.layoutParams = params
 
         snackbar.show()
+    }
+
+    private fun setupSpinner(spinner: Spinner) {
+        // Get unique pin types from pinImageMap
+        val pinTypes = pinImageMap.keys
+            .distinct()
+            .sorted()
+            .toMutableList()
+
+        // Add "All" option at the beginning
+        pinTypes.add(0, "All")
+
+        // Create adapter with our custom layouts
+        val adapter = ArrayAdapter(this, R.layout.spinner_item, pinTypes)
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+        spinner.adapter = adapter
+
+        // Style all dropdown items to have white text
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                // Set text color of selected item to white
+                (view as? TextView)?.setTextColor(Color.WHITE)
+
+                // Apply filter
+                val selectedType = pinTypes[position]
+                currentFilter = if (selectedType == "All") null else selectedType
+                filterMarkers()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                currentFilter = null
+                filterMarkers()
+            }
+        })
+
+        // Ensure spinner is visible
+        spinner.visibility = View.VISIBLE
+    }
+
+    private fun filterMarkers() {
+        val filter = currentFilter
+        Log.d("SKATE.CRETE.OR.DIE", "Filtering markers with: $filter, total markers: ${allMarkers.size}")
+
+        if (filter == null || filter == "All") {
+            // Show all markers
+            allMarkers.forEach { it.isVisible = true }
+            Log.d("SKATE.CRETE.OR.DIE", "Showing all markers")
+        } else {
+            // Filter markers based on selected type
+            var visibleCount = 0
+            allMarkers.forEach { marker ->
+                val skatepark = marker.tag as? Skatepark
+                marker.isVisible = skatepark?.pinimage?.contains(filter) == true
+                if (marker.isVisible) visibleCount++
+            }
+            Log.d("SKATE.CRETE.OR.DIE", "Showing $visibleCount markers after filtering")
+        }
     }
 }
