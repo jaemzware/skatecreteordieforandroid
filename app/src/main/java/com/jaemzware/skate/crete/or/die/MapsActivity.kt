@@ -71,6 +71,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var accumulatedElapsedTime: Long = 0
     private var timerHandler = Handler(Looper.getMainLooper())
     private var timerRunnable: Runnable? = null
+    private var currentFilter = "All"
+    private var currentSkateparkData = ""
 
     val pinImageMap = mapOf(
         "artisanpin" to R.drawable.artisanpin,
@@ -327,9 +329,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     val BATCH_SIZE = 100
                     markers.chunked(BATCH_SIZE).forEach { batch ->
                         batch.forEach { (markerOptions, skatepark) ->
-                            mMap.addMarker(markerOptions)?.apply {
-                                tag = skatepark
-                            }
+                            if(currentFilter.equals("All", ignoreCase = true) || skatepark.pinimage.equals(currentFilter, ignoreCase = true))
+                                mMap.addMarker(markerOptions)?.apply {
+                                    tag = skatepark
+                                }
                         }
                         // Small delay between batches to prevent UI freezing
                         delay(10)
@@ -338,6 +341,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     if (isFromNetwork) {
                         showSnackbar("Latest skatepark data loaded")
                     }
+
+                    currentSkateparkData = data
                 }
 
             } catch (e: JSONException) {
@@ -644,6 +649,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun applyFilters(selectedFilter: String) {
-        Log.d("MapsActivity", "applyFilters called with filter: $selectedFilter")
+        currentFilter = selectedFilter
+        parseAndMapData(currentSkateparkData)
     }
 }
