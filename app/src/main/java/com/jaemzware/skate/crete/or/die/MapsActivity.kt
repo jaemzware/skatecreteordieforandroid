@@ -329,10 +329,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     val BATCH_SIZE = 100
                     markers.chunked(BATCH_SIZE).forEach { batch ->
                         batch.forEach { (markerOptions, skatepark) ->
-                            if(currentFilter.equals("All", ignoreCase = true) || skatepark.pinimage.equals(currentFilter, ignoreCase = true))
+                            if(currentFilter.equals("All", ignoreCase = true) || skatepark.pinimage.equals(currentFilter, ignoreCase = true)) {
                                 mMap.addMarker(markerOptions)?.apply {
                                     tag = skatepark
                                 }
+                            }
                         }
                         // Small delay between batches to prevent UI freezing
                         delay(10)
