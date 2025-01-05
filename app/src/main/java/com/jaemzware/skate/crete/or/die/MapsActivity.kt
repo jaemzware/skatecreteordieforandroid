@@ -1,4 +1,5 @@
 package com.jaemzware.skate.crete.or.die
+import FilterDialogFragment
 import android.app.AlertDialog
 import android.content.ComponentName
 import android.content.Context
@@ -24,6 +25,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -123,6 +125,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val resetButton = findViewById<Button>(R.id.btnResetPolyline)
         resetButton.setOnClickListener {
             resetPolyline()
+        }
+
+        //pin image filter button
+        val filterButton = findViewById<ImageButton>(R.id.btnFilter)
+        filterButton.setOnClickListener {
+            val filterDialogFragment = FilterDialogFragment()
+            filterDialogFragment.show(supportFragmentManager, "filterDialog")
         }
 
         val switchLocationUpdates = findViewById<SwitchCompat>(R.id.switchLocationUpdates)
@@ -632,5 +641,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         snackbar.view.layoutParams = params
 
         snackbar.show()
+    }
+
+    fun applyFilters(selectedFilter: String) {
+        Log.d("MapsActivity", "applyFilters called with filter: $selectedFilter")
     }
 }

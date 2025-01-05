@@ -1,0 +1,38 @@
+import android.app.AlertDialog
+import android.app.Dialog
+import android.os.Bundle
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Spinner
+import androidx.fragment.app.DialogFragment
+import com.jaemzware.skate.crete.or.die.MapsActivity
+import com.jaemzware.skatecreteordie.R
+
+class FilterDialogFragment : DialogFragment() {
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return activity?.let {
+            val builder = AlertDialog.Builder(it)
+            val inflater = requireActivity().layoutInflater
+            val view = inflater.inflate(R.layout.filter_dialog, null)
+
+            val spinnerPinType = view.findViewById<Spinner>(R.id.spinnerPinType)
+            val pinImageMap = (activity as MapsActivity).pinImageMap
+
+            val pinTypes = mutableListOf<String>("All").apply { addAll(pinImageMap.keys) }
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, pinTypes)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerPinType.adapter = adapter
+
+            val applyButton = view.findViewById<Button>(R.id.btnApplyFilters)
+            applyButton.setOnClickListener {
+                val selectedFilter = spinnerPinType.selectedItem.toString()
+                (activity as MapsActivity).applyFilters(selectedFilter)
+                dismiss()
+            }
+
+            builder.setView(view)
+            builder.create()
+        } ?: throw IllegalStateException("Activity cannot be null")
+    }
+}
