@@ -5,6 +5,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
+import com.jaemzware.skate.crete.or.die.CustomSpinnerAdapter
 import com.jaemzware.skate.crete.or.die.MapsActivity
 import com.jaemzware.skatecreteordie.R
 
@@ -25,7 +26,7 @@ class FilterDialogFragment : DialogFragment() {
             val pinImageMap = (activity as MapsActivity).pinImageMap
 
             val pinTypes = mutableListOf<String>("All").apply { addAll(pinImageMap.keys) }
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, pinTypes)
+            val adapter = CustomSpinnerAdapter(requireContext(), pinTypes, pinImageMap)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerPinType.adapter = adapter
 
