@@ -9,6 +9,11 @@ import com.jaemzware.skate.crete.or.die.MapsActivity
 import com.jaemzware.skatecreteordie.R
 
 class FilterDialogFragment : DialogFragment() {
+    private var initialFilter: String? = null
+
+    fun setInitialFilter(filter: String) {
+        initialFilter = filter
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
@@ -23,6 +28,14 @@ class FilterDialogFragment : DialogFragment() {
             val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, pinTypes)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerPinType.adapter = adapter
+
+            // Set spinner selection based on initialFilter
+            initialFilter?.let { filter ->
+                val position = adapter.getPosition(filter)
+                if (position != -1) {
+                    spinnerPinType.setSelection(position)
+                }
+            }
 
             val applyButton = view.findViewById<Button>(R.id.btnApplyFilters)
             applyButton.setOnClickListener {

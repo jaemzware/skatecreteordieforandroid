@@ -133,6 +133,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val filterButton = findViewById<ImageButton>(R.id.btnFilter)
         filterButton.setOnClickListener {
             val filterDialogFragment = FilterDialogFragment()
+            filterDialogFragment.setInitialFilter(currentFilter)
             filterDialogFragment.show(supportFragmentManager, "filterDialog")
         }
 
