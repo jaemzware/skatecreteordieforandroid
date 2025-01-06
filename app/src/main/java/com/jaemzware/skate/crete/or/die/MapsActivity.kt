@@ -295,6 +295,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun parseAndMapData(data: String, isFromNetwork: Boolean = false) {
         // Move to a background thread for parsing
+        mMap.clear()
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 // Create Gson instance once
@@ -322,8 +323,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 // Switch to main thread for map operations
                 withContext(Dispatchers.Main) {
-                    // Clear map once
-                    mMap.clear()
 
                     // Process in larger batches for better performance
                     val BATCH_SIZE = 100
