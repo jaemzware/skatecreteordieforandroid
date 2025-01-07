@@ -1,4 +1,5 @@
 package com.jaemzware.skate.crete.or.die
+import FilterDialogFragment
 import android.app.AlertDialog
 import android.content.ComponentName
 import android.content.Context
@@ -24,6 +25,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -69,6 +71,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var accumulatedElapsedTime: Long = 0
     private var timerHandler = Handler(Looper.getMainLooper())
     private var timerRunnable: Runnable? = null
+    private var currentFilter = "All"
+    private var currentSkateparkData = ""
 
     val pinImageMap = mapOf(
         "artisanpin" to R.drawable.artisanpin,
@@ -123,6 +127,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val resetButton = findViewById<Button>(R.id.btnResetPolyline)
         resetButton.setOnClickListener {
             resetPolyline()
+        }
+
+        //pin image filter button
+        val filterButton = findViewById<ImageButton>(R.id.btnFilter)
+        filterButton.setOnClickListener {
+            val filterDialogFragment = FilterDialogFragment()
+            filterDialogFragment.setInitialFilter(currentFilter)
+            filterDialogFragment.show(supportFragmentManager, "filterDialog")
         }
 
         val switchLocationUpdates = findViewById<SwitchCompat>(R.id.switchLocationUpdates)
@@ -284,6 +296,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun parseAndMapData(data: String, isFromNetwork: Boolean = false) {
         // Move to a background thread for parsing
+        mMap.clear()
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 // Create Gson instance once
@@ -311,15 +324,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 // Switch to main thread for map operations
                 withContext(Dispatchers.Main) {
-                    // Clear map once
-                    mMap.clear()
 
                     // Process in larger batches for better performance
                     val BATCH_SIZE = 100
                     markers.chunked(BATCH_SIZE).forEach { batch ->
                         batch.forEach { (markerOptions, skatepark) ->
-                            mMap.addMarker(markerOptions)?.apply {
-                                tag = skatepark
+                            if(currentFilter.equals("All", ignoreCase = true) || skatepark.pinimage.equals(currentFilter, ignoreCase = true)) {
+                                mMap.addMarker(markerOptions)?.apply {
+                                    tag = skatepark
+                                }
                             }
                         }
                         // Small delay between batches to prevent UI freezing
@@ -329,6 +342,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     if (isFromNetwork) {
                         showSnackbar("Latest skatepark data loaded")
                     }
+
+                    currentSkateparkData = data
                 }
 
             } catch (e: JSONException) {
@@ -632,5 +647,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         snackbar.view.layoutParams = params
 
         snackbar.show()
+    }
+
+    fun applyFilters(selectedFilter: String) {
+        currentFilter = selectedFilter
+        parseAndMapData(currentSkateparkData)
     }
 }
