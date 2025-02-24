@@ -183,7 +183,7 @@ class LocationDetailsFragment : Fragment() {
                 currentPhotoIndex++
 
                 // Check if the current photo index exceeds the number of photos
-                if (currentPhotoIndex >= (photoFilenames.size-1)) {
+                if (currentPhotoIndex > (photoFilenames.size-1)) {
                     // Reset the current photo index to 0 to start from the beginning
                     currentPhotoIndex = 0
                 }
