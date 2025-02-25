@@ -45,8 +45,13 @@ class CustomInfoWindowAdapter(private val context: Context) : GoogleMap.InfoWind
             val firstPhotoUrl = photoFilenames?.firstOrNull()
 
             if (!firstPhotoUrl.isNullOrEmpty()) {
+                val fullImageUrl = if (firstPhotoUrl.startsWith("http://") || firstPhotoUrl.startsWith("https://")) {
+                    firstPhotoUrl
+                } else {
+                    BuildConfig.IMAGES_BASE_URL + firstPhotoUrl
+                }
                 Glide.with(context)
-                    .load(BuildConfig.IMAGES_BASE_URL + "$firstPhotoUrl")
+                    .load(fullImageUrl)
                     .listener(object : RequestListener<Drawable> {
                         override fun onLoadFailed(
                             e: GlideException?,

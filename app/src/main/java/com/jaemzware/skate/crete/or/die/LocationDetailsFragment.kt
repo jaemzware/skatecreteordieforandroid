@@ -162,11 +162,15 @@ class LocationDetailsFragment : Fragment() {
 
             // Function to load the photo at the current index
             fun loadPhoto() {
-                val photoUrl = BuildConfig.IMAGES_BASE_URL + photoFilenames[currentPhotoIndex]
+                val fullImageUrl = if (photoFilenames[currentPhotoIndex].startsWith("http://") || photoFilenames[currentPhotoIndex].startsWith("https://")) {
+                    photoFilenames[currentPhotoIndex]
+                } else {
+                    BuildConfig.IMAGES_BASE_URL + photoFilenames[currentPhotoIndex]
+                }
 
                 // Load the photo using Glide or Picasso library
                 Glide.with(requireContext())
-                    .load(photoUrl)
+                    .load(fullImageUrl)
                     .into(imageView)
             }
 
@@ -179,7 +183,7 @@ class LocationDetailsFragment : Fragment() {
                 currentPhotoIndex++
 
                 // Check if the current photo index exceeds the number of photos
-                if (currentPhotoIndex >= (photoFilenames.size-1)) {
+                if (currentPhotoIndex > (photoFilenames.size-1)) {
                     // Reset the current photo index to 0 to start from the beginning
                     currentPhotoIndex = 0
                 }
