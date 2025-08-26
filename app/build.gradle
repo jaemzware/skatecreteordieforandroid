@@ -14,13 +14,13 @@ if (envFile.exists()) {
 
 android {
     namespace 'com.jaemzware.skatecreteordie'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId 'com.jaemzware.skate.crete.or.die'
         minSdk 31
         //noinspection OldTargetApi
-        targetSdk 34
+        targetSdk 36
         versionCode 25
         versionName "25.0"
 
