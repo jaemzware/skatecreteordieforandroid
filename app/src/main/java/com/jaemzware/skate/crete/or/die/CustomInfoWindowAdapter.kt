@@ -56,25 +56,24 @@ class CustomInfoWindowAdapter(private val context: Context) : GoogleMap.InfoWind
                         override fun onLoadFailed(
                             e: GlideException?,
                             model: Any?,
-                            target: Target<Drawable>?,
+                            target: Target<Drawable>,
                             isFirstResource: Boolean
                         ): Boolean {
-                            // Log error or handle the failure
                             e?.printStackTrace()
                             return false
                         }
 
                         override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
+                            resource: Drawable,  // Changed from Drawable? to Drawable (non-null)
+                            model: Any,          // Changed from Any? to Any (non-null)
+                            target: Target<Drawable>,  // This stays the same
+                            dataSource: DataSource,    // Changed from DataSource? to DataSource (non-null)
                             isFirstResource: Boolean
                         ): Boolean {
                             Handler(Looper.getMainLooper()).post {
                                 if (marker.isInfoWindowShown) {
-                                    marker.hideInfoWindow() // Hide the current info window
-                                    marker.showInfoWindow() // Show the info window again with the image
+                                    marker.hideInfoWindow()
+                                    marker.showInfoWindow()
                                 }
                             }
                             return false

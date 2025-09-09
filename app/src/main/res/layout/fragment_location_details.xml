@@ -2,31 +2,40 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragmentContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#70000000" />
+        android:background="#FF000000" />
+
+    <!-- Close button positioned absolutely at top -->
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/close" />
 
     <LinearLayout
         android:id="@+id/detailsContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#70000000">
+        android:background="@android:color/transparent"
+        android:paddingTop="72dp"
+        android:paddingBottom="56dp"
+        android:clipToPadding="false">
 
-        <!-- Add UI components for skatepark details -->
-        <Button
-            android:id="@+id/closeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/close" />
-
+        <!-- Content starts after the close button -->
         <TextView
             android:id="@+id/skateparkName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@android:color/white" />
@@ -35,6 +44,8 @@
             android:id="@+id/skateparkAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
@@ -44,6 +55,8 @@
             android:id="@+id/skateparkBuilder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@android:color/white" />
@@ -52,6 +65,8 @@
             android:id="@+id/skateparkSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@android:color/white" />
@@ -60,6 +75,8 @@
             android:id="@+id/skateparkLights"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@android:color/white" />
@@ -68,17 +85,18 @@
             android:id="@+id/skateparkCovered"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@android:color/white" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginTop="16dp">
+            android:layout_margin="16dp">
 
             <Button
                 android:id="@+id/directionsButton"
@@ -90,7 +108,7 @@
                 android:layout_marginEnd="8dp"
                 android:padding="16dp"
                 android:minHeight="48dp"
-                android:background="@android:color/black" />
+                android:background="#003366" />
 
             <Button
                 android:id="@+id/mapButton"
@@ -103,7 +121,7 @@
                 android:layout_marginEnd="8dp"
                 android:padding="16dp"
                 android:minHeight="48dp"
-                android:background="@android:color/black" />
+                android:background="#003366" />
 
             <Button
                 android:id="@+id/websiteButton"
@@ -115,15 +133,16 @@
                 android:layout_marginStart="8dp"
                 android:padding="16dp"
                 android:minHeight="48dp"
-                android:background="@android:color/black" />
+                android:background="#003366" />
 
         </LinearLayout>
 
-        <ImageView
+        <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/skateparkImage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:layout_margin="16dp"
             android:scaleType="fitCenter"
             android:contentDescription="@string/skateparkimage" />
 

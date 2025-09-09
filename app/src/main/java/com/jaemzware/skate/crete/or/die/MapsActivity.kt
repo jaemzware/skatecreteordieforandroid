@@ -238,6 +238,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             inputStream.read(buffer)
             inputStream.close()
             val skateparkData = String(buffer)
+            currentSkateparkData = skateparkData
             parseAndMapData(skateparkData)
         } catch (e: IOException) {
             e.printStackTrace()
@@ -295,8 +296,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun parseAndMapData(data: String, isFromNetwork: Boolean = false) {
-        // Move to a background thread for parsing
+        // Clear the map first to remove any existing markers
         mMap.clear()
+
+        // Move to a background thread for parsing
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 // Create Gson instance once
@@ -324,7 +327,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 // Switch to main thread for map operations
                 withContext(Dispatchers.Main) {
-
                     // Process in larger batches for better performance
                     val BATCH_SIZE = 100
                     markers.chunked(BATCH_SIZE).forEach { batch ->
@@ -341,9 +343,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     if (isFromNetwork) {
                         showSnackbar("Latest skatepark data loaded")
+                        // Update currentSkateparkData only when network data is successfully loaded
+                        currentSkateparkData = data
                     }
-
-                    currentSkateparkData = data
                 }
 
             } catch (e: JSONException) {
