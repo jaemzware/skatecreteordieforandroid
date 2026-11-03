@@ -360,9 +360,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun showLocationDisclosureDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Location Disclosure")
-        builder.setMessage("skate.crete.or.die collects location information to track your path through skateparks.\n\n" +
+        builder.setMessage("Skatepark Map collects location information to track your path through skateparks.\n\n" +
                 "It needs location permission set to \"Allow all the time\" in order to track while your phone is locked.\n\n" +
-                "skate.crete.or.die does not collect location information once the app is shut down, nor does save or share collected information with 3rd parties.\n\n" +
+                "Skatepark Map does not collect location information once the app is shut down, nor does save or share collected information with 3rd parties.\n\n" +
                 "Tracking can be turned off any time using the \"Track\" switch on the bottom of the screen.")
         builder.setPositiveButton("Accept") { _, _ ->
             // User accepted the location disclosure

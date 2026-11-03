@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">skate.crete.or.die</string>
+    <string name="app_name">Skatepark Map</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="center">Center</string>
     <string name="reset">Reset</string>
